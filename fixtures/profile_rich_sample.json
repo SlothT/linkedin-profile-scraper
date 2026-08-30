@@ -1,0 +1,790 @@
+{
+  "data": {
+    "*elements": [
+      "urn:li:fsd_profile:taylor-quinn-demo"
+    ]
+  },
+  "included": [
+    {
+      "entityUrn": "urn:li:fsd_profile:taylor-quinn-demo",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Profile",
+      "publicIdentifier": "taylor-quinn-demo",
+      "objectUrn": "urn:li:member:100000002",
+      "firstName": "Taylor",
+      "lastName": "Quinn",
+      "headline": "Software Engineer | Backend & AI/ML Systems  | Ex-Meridian, Ex-Foodline",
+      "summary": "Backend and ML systems. Previously Meridian and Foodline.",
+      "premium": false,
+      "influencer": false,
+      "creator": false,
+      "profilePicture": {
+        "displayImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQTDISP0001/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 800,
+                "height": 800,
+                "fileIdentifyingUrlPathSegment": "scale_800_800/0/1"
+              },
+              {
+                "width": 400,
+                "height": 400,
+                "fileIdentifyingUrlPathSegment": "scale_400_400/0/2"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/3"
+              },
+              {
+                "width": 100,
+                "height": 100,
+                "fileIdentifyingUrlPathSegment": "scale_100_100/0/4"
+              }
+            ]
+          }
+        }
+      },
+      "backgroundPicture": {
+        "displayImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQTBGDISP01/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 1400,
+                "height": 1400,
+                "fileIdentifyingUrlPathSegment": "scale_1400_1400/0/1"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+              }
+            ]
+          }
+        }
+      },
+      "geoLocation": {
+        "*geo": "urn:li:fsd_geo:exampleland-country"
+      },
+      "location": {
+        "countryCode": "IN"
+      },
+      "*industry": "urn:li:fsd_industry:4",
+      "*profilePositionGroups": "urn:li:collectionResponse:taylor:positionGroups",
+      "*profileEducations": "urn:li:collectionResponse:taylor:educations",
+      "*profileSkills": "urn:li:collectionResponse:taylor:skills",
+      "*profileCertifications": "urn:li:collectionResponse:taylor:certs",
+      "*profileLanguages": "urn:li:collectionResponse:taylor:langs",
+      "*profileProjects": "urn:li:collectionResponse:taylor:projects",
+      "*profileTreasuryMediaProfile": "urn:li:collectionResponse:taylor:featured",
+      "*profileVolunteerExperiences": "urn:li:collectionResponse:taylor:profileVolunteerExperiences",
+      "*profileHonors": "urn:li:collectionResponse:taylor:profileHonors",
+      "*profilePublications": "urn:li:collectionResponse:taylor:profilePublications",
+      "*profilePatents": "urn:li:collectionResponse:taylor:profilePatents",
+      "*profileCourses": "urn:li:collectionResponse:taylor:profileCourses",
+      "*profileOrganizations": "urn:li:collectionResponse:taylor:profileOrganizations",
+      "*profileTestScores": "urn:li:collectionResponse:taylor:profileTestScores",
+      "*profileRingStatusCollection": "urn:li:collectionResponse:taylor:profileRingStatusCollection",
+      "*profileVideoPreview": "urn:li:collectionResponse:taylor:profileVideoPreview"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:positionGroups",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePositionGroup:taylor:1",
+        "urn:li:fsd_profilePositionGroup:taylor:2",
+        "urn:li:fsd_profilePositionGroup:taylor:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 3,
+        "total": 3
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:group1",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:taylor:1"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:group2",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:taylor:2"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:group3",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:taylor:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Atlas",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:taylor:group1"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Meridian",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:taylor:group2"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:taylor:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Foodline",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:taylor:group3"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Software Engineer",
+      "companyName": "Atlas",
+      "companyUrn": "urn:li:fsd_company:atlas-demo",
+      "*company": "urn:li:fsd_company:atlas-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "description": "Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval. Designed and shipped backend services for ranking and retrieval.",
+      "dateRange": {
+        "start": {
+          "month": 2,
+          "year": 2023
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Backend Engineer",
+      "companyName": "Meridian",
+      "companyUrn": "urn:li:fsd_company:meridian-demo",
+      "*company": "urn:li:fsd_company:meridian-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "description": "Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams. Owned the feature platform used by production ML models across teams.",
+      "dateRange": {
+        "start": {
+          "month": 4,
+          "year": 2021
+        },
+        "end": {
+          "month": 1,
+          "year": 2023
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:taylor:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "ML Engineer",
+      "companyName": "Foodline",
+      "companyUrn": "urn:li:fsd_company:foodline-demo",
+      "*company": "urn:li:fsd_company:foodline-demo",
+      "description": "Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints. Led migration of monolith extract jobs onto a streaming pipeline with checkpoints.",
+      "dateRange": {
+        "start": {
+          "month": 8,
+          "year": 2019
+        },
+        "end": {
+          "month": 3,
+          "year": 2021
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:meridian-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/meridian-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQMDLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:foodline-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/foodline-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQFDLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:atlas-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/atlas-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQATLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_employmentType:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.EmploymentType",
+      "name": "Full-time"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:educations",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileEducation:taylor:1"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileEducation:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Education",
+      "schoolName": "Example University",
+      "degreeName": "Bachelor of Engineering",
+      "fieldOfStudy": "Computer Science and Engineering ",
+      "grade": "CGPA: 8.4 / 10",
+      "*school": "urn:li:fsd_school:example-uni-demo",
+      "*degree": "urn:li:fsd_degree:bs-demo",
+      "dateRange": {
+        "start": {
+          "year": 2015
+        },
+        "end": {
+          "year": 2019
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_school:example-uni-demo",
+      "$type": "com.linkedin.voyager.dash.organization.School",
+      "url": "https://www.linkedin.com/school/example-uni-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQSCHOOL0002/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_degree:bs-demo",
+      "$type": "com.linkedin.voyager.dash.identity.profile.StandardizedDegree"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:skills",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_skill:taylor:0",
+        "urn:li:fsd_skill:taylor:1",
+        "urn:li:fsd_skill:taylor:2",
+        "urn:li:fsd_skill:taylor:3",
+        "urn:li:fsd_skill:taylor:4",
+        "urn:li:fsd_skill:taylor:5",
+        "urn:li:fsd_skill:taylor:6",
+        "urn:li:fsd_skill:taylor:7",
+        "urn:li:fsd_skill:taylor:8",
+        "urn:li:fsd_skill:taylor:9",
+        "urn:li:fsd_skill:taylor:10",
+        "urn:li:fsd_skill:taylor:11",
+        "urn:li:fsd_skill:taylor:12",
+        "urn:li:fsd_skill:taylor:13",
+        "urn:li:fsd_skill:taylor:14",
+        "urn:li:fsd_skill:taylor:15",
+        "urn:li:fsd_skill:taylor:16",
+        "urn:li:fsd_skill:taylor:17",
+        "urn:li:fsd_skill:taylor:18",
+        "urn:li:fsd_skill:taylor:19"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 20,
+        "total": 36
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:0",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Python"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Backend"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "AI/ML"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "PyTorch"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:4",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "FastAPI"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:5",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Kafka"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:6",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Spark"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:7",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "SQL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:8",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Microservices"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:9",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Go"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:10",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Rust"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:11",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "C++"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:12",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Data Pipelines"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:13",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Feature Stores"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:14",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "LLM"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:15",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Vector Databases"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:16",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Airflow"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:17",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Kubernetes"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:18",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Terraform"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:taylor:19",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Observability"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:certs",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileCertification:taylor:0",
+        "urn:li:fsd_profileCertification:taylor:1",
+        "urn:li:fsd_profileCertification:taylor:2",
+        "urn:li:fsd_profileCertification:taylor:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 4,
+        "total": 4
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:taylor:0",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Rich Cert 1",
+      "authority": "Coursera",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 6
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Rich Cert 2",
+      "authority": "DeepLearning.AI",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 6
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Rich Cert 3",
+      "authority": "AWS",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 6
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:taylor:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Rich Cert 4",
+      "authority": "Linux Foundation",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 6
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:langs",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileLanguage:taylor:1",
+        "urn:li:fsd_profileLanguage:taylor:2",
+        "urn:li:fsd_profileLanguage:taylor:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 3,
+        "total": 3
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileLanguage:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Language",
+      "name": "English",
+      "proficiency": "FULL_PROFESSIONAL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileLanguage:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Language",
+      "name": "Hindi",
+      "proficiency": "NATIVE_OR_BILINGUAL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileLanguage:taylor:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Language",
+      "name": "Tamil",
+      "proficiency": "LIMITED_WORKING"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:projects",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileProject:taylor:1",
+        "urn:li:fsd_profileProject:taylor:2"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 2,
+        "total": 2
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileProject:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Project",
+      "title": "ATLAS Retrieval Stack",
+      "description": "End-to-end retrieval service used by the ranking stack, including evaluation harnesses."
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileProject:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Project",
+      "title": "Feature Store Bridge",
+      "description": "Streaming feature materialization with point-in-time joins for production models."
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:featured",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileTreasuryMedia:taylor:1",
+        "urn:li:fsd_profileTreasuryMedia:taylor:2"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 2,
+        "total": 2
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileTreasuryMedia:taylor:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.TreasuryMedia",
+      "title": "Talk: ranking systems",
+      "description": "Conference talk",
+      "providerName": "Example Video",
+      "data": {
+        "Url": "https://video.example.invalid/watch/atlas-talk"
+      },
+      "previewImage": {
+        "attributes": [
+          {
+            "detailDataUnion": {
+              "vectorImage": {
+                "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQFEATPREV01/profile-displayphoto-",
+                "artifacts": [
+                  {
+                    "width": 400,
+                    "height": 400,
+                    "fileIdentifyingUrlPathSegment": "scale_400_400/0/1"
+                  },
+                  {
+                    "width": 200,
+                    "height": 200,
+                    "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileTreasuryMedia:taylor:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.TreasuryMedia",
+      "title": "Blog: feature platforms",
+      "description": "Write-up",
+      "providerName": "Example Blog",
+      "data": {
+        "Url": "https://blog.example.invalid/atlas-features"
+      },
+      "previewImage": {
+        "attributes": [
+          {
+            "detailDataUnion": {
+              "vectorImage": {
+                "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQFEATPREV01/profile-displayphoto-",
+                "artifacts": [
+                  {
+                    "width": 400,
+                    "height": 400,
+                    "fileIdentifyingUrlPathSegment": "scale_400_400/0/1"
+                  },
+                  {
+                    "width": 200,
+                    "height": 200,
+                    "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_geo:exampleland-country",
+      "$type": "com.linkedin.voyager.dash.common.Geo",
+      "defaultLocalizedName": "Exampleland",
+      "defaultLocalizedNameWithoutCountryName": "Exampleland",
+      "countryUrn": null
+    },
+    {
+      "entityUrn": "urn:li:fsd_industry:4",
+      "$type": "com.linkedin.voyager.dash.common.Industry",
+      "name": "Computer Software"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileVolunteerExperiences",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileHonors",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profilePublications",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profilePatents",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileCourses",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileOrganizations",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileTestScores",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileRingStatusCollection",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:taylor:profileVideoPreview",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    }
+  ]
+}
