@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.python-version
+dist/
+build/
+
+# Allowlist: only the two anonymised fixtures under fixtures/ are committable.
+fixtures/*
+!fixtures/profile_sample.json
+!fixtures/profile_rich_sample.json
