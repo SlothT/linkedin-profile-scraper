@@ -1,0 +1,6 @@
+.env*
+fixtures/raw_*
+tests/
+.venv/
+__pycache__/
+.git/

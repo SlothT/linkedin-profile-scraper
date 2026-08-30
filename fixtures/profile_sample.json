@@ -1,0 +1,868 @@
+{
+  "data": {
+    "*elements": [
+      "urn:li:fsd_profile:alex-rivera-demo"
+    ]
+  },
+  "included": [
+    {
+      "entityUrn": "urn:li:fsd_profile:alex-rivera-demo",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Profile",
+      "publicIdentifier": "alex-rivera-demo",
+      "objectUrn": "urn:li:member:100000001",
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "headline": "Senior Software Engineer at Northwind | Ex-Contoso",
+      "summary": "Builds backend systems at Northwind. Previously Contoso and Fabrikam.",
+      "premium": false,
+      "influencer": false,
+      "creator": false,
+      "profilePicture": {
+        "displayImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQDISP0001/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 800,
+                "height": 800,
+                "fileIdentifyingUrlPathSegment": "scale_800_800/0/1"
+              },
+              {
+                "width": 400,
+                "height": 400,
+                "fileIdentifyingUrlPathSegment": "scale_400_400/0/2"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/3"
+              },
+              {
+                "width": 100,
+                "height": 100,
+                "fileIdentifyingUrlPathSegment": "scale_100_100/0/4"
+              }
+            ]
+          }
+        },
+        "originalImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQORIG0001/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 800,
+                "height": 800,
+                "fileIdentifyingUrlPathSegment": "scale_800_800/0/1"
+              },
+              {
+                "width": 400,
+                "height": 400,
+                "fileIdentifyingUrlPathSegment": "scale_400_400/0/2"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/3"
+              },
+              {
+                "width": 100,
+                "height": 100,
+                "fileIdentifyingUrlPathSegment": "scale_100_100/0/4"
+              }
+            ]
+          }
+        }
+      },
+      "backgroundPicture": {
+        "displayImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQBGDISP01/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 1400,
+                "height": 1400,
+                "fileIdentifyingUrlPathSegment": "scale_1400_1400/0/1"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+              }
+            ]
+          }
+        },
+        "originalImageReference": {
+          "vectorImage": {
+            "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQBGORIG01/profile-displayphoto-",
+            "artifacts": [
+              {
+                "width": 1400,
+                "height": 1400,
+                "fileIdentifyingUrlPathSegment": "scale_1400_1400/0/1"
+              },
+              {
+                "width": 200,
+                "height": 200,
+                "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+              }
+            ]
+          }
+        }
+      },
+      "geoLocation": {
+        "*geo": "urn:li:fsd_geo:springfield-demo"
+      },
+      "location": {
+        "countryCode": "IN"
+      },
+      "*industry": "urn:li:fsd_industry:96",
+      "*profilePositionGroups": "urn:li:collectionResponse:alex:positionGroups",
+      "*profileEducations": "urn:li:collectionResponse:alex:educations",
+      "*profileSkills": "urn:li:collectionResponse:alex:skills",
+      "*profileCertifications": "urn:li:collectionResponse:alex:certs",
+      "*profileLanguages": "urn:li:collectionResponse:alex:langs",
+      "*profileProjects": "urn:li:collectionResponse:alex:projects",
+      "*profileTreasuryMediaProfile": "urn:li:collectionResponse:alex:featured",
+      "*profileVolunteerExperiences": "urn:li:collectionResponse:alex:profileVolunteerExperiences",
+      "*profileHonors": "urn:li:collectionResponse:alex:profileHonors",
+      "*profilePublications": "urn:li:collectionResponse:alex:profilePublications",
+      "*profilePatents": "urn:li:collectionResponse:alex:profilePatents",
+      "*profileCourses": "urn:li:collectionResponse:alex:profileCourses",
+      "*profileOrganizations": "urn:li:collectionResponse:alex:profileOrganizations",
+      "*profileTestScores": "urn:li:collectionResponse:alex:profileTestScores",
+      "*profileRingStatusCollection": "urn:li:collectionResponse:alex:profileRingStatusCollection",
+      "*profileVideoPreview": "urn:li:collectionResponse:alex:profileVideoPreview"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:positionGroups",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePositionGroup:alex:1",
+        "urn:li:fsd_profilePositionGroup:alex:2",
+        "urn:li:fsd_profilePositionGroup:alex:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 3,
+        "total": 3
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:group1",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:alex:1",
+        "urn:li:fsd_profilePosition:alex:2",
+        "urn:li:fsd_profilePosition:alex:3"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 3,
+        "total": 3
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:group2",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:alex:4"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:group3",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profilePosition:alex:5"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Northwind",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:alex:group1"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:alex:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Contoso",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:alex:group2"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:alex:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+      "companyName": "Fabrikam",
+      "*profilePositionInPositionGroup": "urn:li:collectionResponse:alex:group3"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Senior Software Engineer",
+      "companyName": "Northwind",
+      "companyUrn": "urn:li:fsd_company:northwind-demo",
+      "*company": "urn:li:fsd_company:northwind-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "locationName": "Springfield, Example State",
+      "dateRange": {
+        "start": {
+          "month": 1,
+          "year": 2023
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:alex:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Software Engineer",
+      "companyName": "Northwind",
+      "companyUrn": "urn:li:fsd_company:northwind-demo",
+      "*company": "urn:li:fsd_company:northwind-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "locationName": "Springfield, Example State",
+      "dateRange": {
+        "start": {
+          "month": 6,
+          "year": 2021
+        },
+        "end": {
+          "month": 12,
+          "year": 2022
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:alex:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Software Engineer Intern",
+      "companyName": "Northwind",
+      "companyUrn": "urn:li:fsd_company:northwind-demo",
+      "*company": "urn:li:fsd_company:northwind-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "dateRange": {
+        "start": {
+          "month": 5,
+          "year": 2020
+        },
+        "end": {
+          "month": 8,
+          "year": 2020
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:alex:4",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Software Engineer",
+      "companyName": "Contoso",
+      "companyUrn": "urn:li:fsd_company:contoso-demo",
+      "*company": "urn:li:fsd_company:contoso-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "dateRange": {
+        "start": {
+          "month": 7,
+          "year": 2019
+        },
+        "end": {
+          "month": 5,
+          "year": 2021
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePosition:alex:5",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+      "title": "Junior Developer",
+      "companyName": "Fabrikam",
+      "companyUrn": "urn:li:fsd_company:fabrikam-demo",
+      "*company": "urn:li:fsd_company:fabrikam-demo",
+      "*employmentType": "urn:li:fsd_employmentType:2",
+      "dateRange": {
+        "start": {
+          "month": 1,
+          "year": 2018
+        },
+        "end": {
+          "month": 6,
+          "year": 2019
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:northwind-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/northwind-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQNWLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:contoso-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/contoso-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQCSLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_company:fabrikam-demo",
+      "$type": "com.linkedin.voyager.dash.organization.Company",
+      "url": "https://www.linkedin.com/company/fabrikam-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQFBLOGO0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            },
+            {
+              "width": 50,
+              "height": 50,
+              "fileIdentifyingUrlPathSegment": "scale_50_50/0/3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_employmentType:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.EmploymentType",
+      "name": "Full-time"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:educations",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileEducation:alex:1"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileEducation:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Education",
+      "schoolName": "Springfield Institute of Technology",
+      "degreeName": "Bachelor of Technology",
+      "fieldOfStudy": "Computer Science and Engineering ",
+      "grade": "8.09",
+      "*school": "urn:li:fsd_school:springfield-demo",
+      "dateRange": {
+        "start": {
+          "year": 2018
+        },
+        "end": {
+          "year": 2022
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_school:springfield-demo",
+      "$type": "com.linkedin.voyager.dash.organization.School",
+      "url": "https://www.linkedin.com/school/springfield-demo",
+      "logo": {
+        "vectorImage": {
+          "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQSCHOOL0001/profile-displayphoto-",
+          "artifacts": [
+            {
+              "width": 200,
+              "height": 200,
+              "fileIdentifyingUrlPathSegment": "scale_200_200/0/1"
+            },
+            {
+              "width": 100,
+              "height": 100,
+              "fileIdentifyingUrlPathSegment": "scale_100_100/0/2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:skills",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_skill:alex:0",
+        "urn:li:fsd_skill:alex:1",
+        "urn:li:fsd_skill:alex:2",
+        "urn:li:fsd_skill:alex:3",
+        "urn:li:fsd_skill:alex:4",
+        "urn:li:fsd_skill:alex:5",
+        "urn:li:fsd_skill:alex:6",
+        "urn:li:fsd_skill:alex:7",
+        "urn:li:fsd_skill:alex:8",
+        "urn:li:fsd_skill:alex:9",
+        "urn:li:fsd_skill:alex:10",
+        "urn:li:fsd_skill:alex:11",
+        "urn:li:fsd_skill:alex:12",
+        "urn:li:fsd_skill:alex:13",
+        "urn:li:fsd_skill:alex:14",
+        "urn:li:fsd_skill:alex:15",
+        "urn:li:fsd_skill:alex:16",
+        "urn:li:fsd_skill:alex:17",
+        "urn:li:fsd_skill:alex:18",
+        "urn:li:fsd_skill:alex:19"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 20,
+        "total": 26
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:0",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Python"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "FastAPI"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Distributed Systems"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "PostgreSQL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:4",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Redis"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:5",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Docker"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:6",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Kubernetes"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:7",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "AWS"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:8",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "CI/CD"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:9",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "System Design"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:10",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "REST APIs"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:11",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Linux"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:12",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Git"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:13",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "TypeScript"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:14",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "React"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:15",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Observability"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:16",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "GraphQL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:17",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "gRPC"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:18",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Terraform"
+    },
+    {
+      "entityUrn": "urn:li:fsd_skill:alex:19",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+      "name": "Machine Learning"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:certs",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileCertification:alex:0",
+        "urn:li:fsd_profileCertification:alex:1",
+        "urn:li:fsd_profileCertification:alex:2",
+        "urn:li:fsd_profileCertification:alex:3",
+        "urn:li:fsd_profileCertification:alex:4",
+        "urn:li:fsd_profileCertification:alex:5",
+        "urn:li:fsd_profileCertification:alex:6"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 7,
+        "total": 7
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:0",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 1",
+      "authority": "OpenCourse",
+      "dateRange": {
+        "start": {
+          "year": 2020,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 2",
+      "authority": "Northwind",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 3",
+      "authority": "Contoso",
+      "dateRange": {
+        "start": {
+          "year": 2022,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:3",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 4",
+      "authority": "Fabrikam",
+      "dateRange": {
+        "start": {
+          "year": 2023,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:4",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 5",
+      "authority": "Example Institute",
+      "dateRange": {
+        "start": {
+          "year": 2020,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:5",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 6",
+      "authority": "Cloud Academy",
+      "dateRange": {
+        "start": {
+          "year": 2021,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileCertification:alex:6",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Certification",
+      "name": "Certification 7",
+      "authority": "Linux Foundation",
+      "dateRange": {
+        "start": {
+          "year": 2022,
+          "month": 3
+        }
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:langs",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileLanguage:alex:1",
+        "urn:li:fsd_profileLanguage:alex:2"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 2,
+        "total": 2
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileLanguage:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Language",
+      "name": "English",
+      "proficiency": "FULL_PROFESSIONAL"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileLanguage:alex:2",
+      "$type": "com.linkedin.voyager.dash.identity.profile.Language",
+      "name": "Hindi",
+      "proficiency": "NATIVE_OR_BILINGUAL"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:projects",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:featured",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [
+        "urn:li:fsd_profileTreasuryMedia:alex:1"
+      ],
+      "paging": {
+        "start": 0,
+        "count": 1,
+        "total": 1
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileTreasuryMedia:alex:1",
+      "$type": "com.linkedin.voyager.dash.identity.profile.TreasuryMedia",
+      "title": "Resume",
+      "description": "Uploaded r\u00e9sum\u00e9 PDF",
+      "data": {
+        "NativeDocument": {
+          "transcribedDocumentUrl": "https://media.example.invalid/document/v2/D4E10AQDOC0001/transcribed?t=placeholder",
+          "manifestUrl": "https://media.example.invalid/document/v2/D4E10AQDOC0001/manifest?t=placeholder"
+        }
+      },
+      "previewImage": {
+        "attributes": [
+          {
+            "detailDataUnion": {
+              "vectorImage": {
+                "rootUrl": "https://media.example.invalid/dms/image/v2/D4E03AQFEATPREV01/profile-displayphoto-",
+                "artifacts": [
+                  {
+                    "width": 400,
+                    "height": 400,
+                    "fileIdentifyingUrlPathSegment": "scale_400_400/0/1"
+                  },
+                  {
+                    "width": 200,
+                    "height": 200,
+                    "fileIdentifyingUrlPathSegment": "scale_200_200/0/2"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_profileTreasuryMedia:alex:dangling",
+      "$type": "com.linkedin.voyager.dash.identity.profile.TreasuryMedia",
+      "title": "Dangling leftover",
+      "data": {
+        "Url": "https://example.invalid/dangling"
+      }
+    },
+    {
+      "entityUrn": "urn:li:fsd_geo:springfield-demo",
+      "$type": "com.linkedin.voyager.dash.common.Geo",
+      "defaultLocalizedName": "Springfield, Example State, Exampleland",
+      "defaultLocalizedNameWithoutCountryName": "Springfield, Example State",
+      "*country": "urn:li:fsd_geo:exampleland"
+    },
+    {
+      "entityUrn": "urn:li:fsd_geo:exampleland",
+      "$type": "com.linkedin.voyager.dash.common.Geo",
+      "defaultLocalizedName": "Exampleland",
+      "defaultLocalizedNameWithoutCountryName": "Exampleland"
+    },
+    {
+      "entityUrn": "urn:li:fsd_industry:96",
+      "$type": "com.linkedin.voyager.dash.common.Industry",
+      "name": "Information Technology & Services"
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileVolunteerExperiences",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileHonors",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profilePublications",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profilePatents",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileCourses",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileOrganizations",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileTestScores",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileRingStatusCollection",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    },
+    {
+      "entityUrn": "urn:li:collectionResponse:alex:profileVideoPreview",
+      "$type": "com.linkedin.voyager.dash.common.CollectionResponse",
+      "*elements": [],
+      "paging": {
+        "start": 0,
+        "count": 0,
+        "total": 0
+      }
+    }
+  ]
+}
