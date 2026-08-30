@@ -1,0 +1,24 @@
+# Region must be the Render region nearest where the li_at cookie was minted.
+# Impossible-travel detection is the strongest revocation trigger (spec 0.10).
+# Default Render region is Oregon; for a cookie created in India use singapore.
+# Change this if you redeploy with a cookie minted elsewhere.
+services:
+  - type: web
+    name: linkedin-profile-api
+    runtime: docker
+    region: singapore
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: LINKEDIN_LI_AT
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: PROXY_URL
+        sync: false
+      - key: CACHE_TTL
+        sync: false
+      - key: UPSTREAM_LIMIT
+        sync: false
+      - key: RATE_LIMIT_PER_MINUTE
+        sync: false
