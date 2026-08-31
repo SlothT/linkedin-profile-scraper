@@ -113,8 +113,10 @@ def test_company_url(client: TestClient) -> None:
 def test_health(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
-    assert isinstance(response.json()["server_session_configured"], bool)
-    assert "api_key_required" not in response.json()
+    body = response.json()
+    assert isinstance(body["server_session_configured"], bool)
+    assert isinstance(body["proxy_configured"], bool)
+    assert "api_key_required" not in body
 
 
 def test_ui_index_is_html_and_docs_still_exist(client: TestClient) -> None:

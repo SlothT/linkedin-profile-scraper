@@ -307,7 +307,7 @@
     function renderError(body, httpStatus) {
       const err = (body && body.error) || {};
       const tip = err.type === "SessionRevokedError"
-        ? `<p class="hint">That cookie is dead — LinkedIn invalidated it. Paste a <strong>fresh</strong> <code>li_at</code> (value usually starts with <code>AQ</code>). Do not reuse this one.</p>`
+        ? `<p class="hint">That cookie is dead — LinkedIn invalidated it. Paste a <strong>fresh</strong> <code>li_at</code> (usually starts with <code>AQ</code>). For free use: mint the cookie and run this app on the <strong>same home network</strong> (local <code>uvicorn</code>). Render/cloud IPs revoke quickly. nginx cannot hide the egress IP.</p>`
         : "";
       result.innerHTML = `
         <h2>Result</h2>

@@ -131,10 +131,15 @@ async def test_missing_included_is_shape_error() -> None:
 @pytest.mark.asyncio
 async def test_headers_csrf_cookie_and_no_user_agent(sample_payload: dict) -> None:
     cookie_value = "test-li-at-once"
-    transport = FakeTransport([_json_response(sample_payload)])
+    transport = FakeTransport([_json_response(sample_payload), _json_response(sample_payload)])
     client = VoyagerClient(cookie_value, transport=transport)
     await client.fetch_profile("alex-rivera-demo")
-    assert transport.calls
+    other = VoyagerClient(cookie_value, transport=transport)
+    await other.fetch_profile("alex-rivera-demo")
+    assert len(transport.calls) == 2
+    first_csrf = transport.calls[0][1]["csrf-token"]
+    second_csrf = transport.calls[1][1]["csrf-token"]
+    assert first_csrf == second_csrf
     for _url, headers in transport.calls:
         cookie = headers["cookie"]
         assert cookie.count(f"li_at={cookie_value}") == 1

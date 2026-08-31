@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import json
 import random
-import string
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Protocol
@@ -27,6 +26,7 @@ from app.linkedin.constants import (
     VOYAGER_BASE,
     build_headers,
 )
+from app.linkedin.session import csrf_token_for_li_at, normalize_li_at
 
 
 @dataclass
@@ -52,20 +52,42 @@ class Transport(Protocol):
 
 
 class CurlTransport:
-    """Real transport. curl_cffi AsyncSession with Chrome impersonation."""
+    """Real transport. Reuses one Chrome-impersonating AsyncSession for connection reuse."""
 
     def __init__(self, proxy_url: str | None = None, ca_bundle: str | None = None) -> None:
         self._proxy_url = proxy_url
         self._ca_bundle = ca_bundle
+        self._session: AsyncSession | None = None
+        self._lock = asyncio.Lock()
+
+    async def _ensure_session(self) -> AsyncSession:
+        if self._session is not None:
+            return self._session
+        async with self._lock:
+            if self._session is None:
+                verify: bool | str = self._ca_bundle or True
+                self._session = AsyncSession(
+                    impersonate=IMPERSONATE_TARGET,
+                    verify=verify,
+                    proxy=self._proxy_url,
+                )
+            return self._session
+
+    async def aclose(self) -> None:
+        async with self._lock:
+            if self._session is not None:
+                await self._session.close()
+                self._session = None
 
     async def get(self, url: str, headers: Mapping[str, str]) -> VoyagerResponse:
-        verify: bool | str = self._ca_bundle or True
         try:
-            async with AsyncSession(impersonate=IMPERSONATE_TARGET, verify=verify, proxy=self._proxy_url) as session:
-                response = await session.get(url, headers=dict(headers), allow_redirects=False)
+            session = await self._ensure_session()
+            response = await session.get(url, headers=dict(headers), allow_redirects=False)
         except RequestException as exc:
+            await self.aclose()
             raise UpstreamUnavailableError() from exc
         except OSError as exc:
+            await self.aclose()
             raise UpstreamUnavailableError() from exc
         header_map = {key: value for key, value in response.headers.items()}
         return VoyagerResponse(
@@ -78,8 +100,8 @@ class CurlTransport:
 
 class VoyagerClient:
     def __init__(self, li_at: str, transport: Transport | None = None) -> None:
-        self._li_at = li_at
-        self._csrf_token = "ajax:" + "".join(random.choices(string.digits, k=19))
+        self._li_at = normalize_li_at(li_at)
+        self._csrf_token = csrf_token_for_li_at(self._li_at)
         self._transport = transport or CurlTransport()
 
     def _request_headers(self, referer: str | None) -> dict[str, str]:

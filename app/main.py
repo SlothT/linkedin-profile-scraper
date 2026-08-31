@@ -32,6 +32,7 @@ from app.errors import (
 from app.linkedin.client import CurlTransport, Transport, VoyagerClient
 from app.linkedin.constants import DECORATION_CANDIDATES
 from app.linkedin.mapper import UNVERIFIED_SECTIONS, build_profile_data
+from app.linkedin.session import normalize_li_at
 from app.linkedin.urls import extract_vanity_name
 from app.logging_setup import configure_logging
 from app.schemas import ProfileData, ProfileRequest, ProfileResponse, ResponseMeta, TruncationInfo
@@ -56,6 +57,7 @@ limiter = Limiter(key_func=get_remote_address)
 
 logger = logging.getLogger("linkedin-profile-api")
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+_shared_transport: CurlTransport | None = None
 
 ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: {"description": "Invalid profile URL"},
@@ -73,17 +75,26 @@ def _client_rate_limit() -> str:
 
 
 def get_transport() -> Transport:
-    settings = get_settings()
-    return CurlTransport(proxy_url=settings.proxy_url, ca_bundle=settings.ca_bundle)
+    """Process-wide CurlTransport so TLS connections are reused across lookups."""
+    global _shared_transport
+    if _shared_transport is None:
+        settings = get_settings()
+        _shared_transport = CurlTransport(
+            proxy_url=settings.proxy_url,
+            ca_bundle=settings.ca_bundle,
+        )
+    return _shared_transport
 
 
 def reset_runtime_state() -> None:
     """Test helper: drop in-process caches, locks, and the upstream ceiling window."""
+    global _shared_transport
     fresh_cache.clear()
     stale_cache.clear()
     flight_locks.clear()
     upstream_timestamps.clear()
     limiter._storage.reset()
+    _shared_transport = None
 
 
 def _lock_for(vanity_name: str) -> asyncio.Lock:
@@ -123,12 +134,18 @@ def _require_api_key(request: Request) -> None:
 def _resolve_session(request: Request, body_li_at: str | None) -> str:
     header_cookie = request.headers.get("x-li-at")
     if header_cookie:
-        return header_cookie
+        normalized = normalize_li_at(header_cookie)
+        if normalized:
+            return normalized
     if body_li_at:
-        return body_li_at
+        normalized = normalize_li_at(body_li_at)
+        if normalized:
+            return normalized
     settings = get_settings()
     if settings.linkedin_li_at:
-        return settings.linkedin_li_at
+        normalized = normalize_li_at(settings.linkedin_li_at)
+        if normalized:
+            return normalized
     raise MissingCredentialsError()
 
 
@@ -234,6 +251,10 @@ async def lifespan(_app: FastAPI):
     secrets = [settings.linkedin_li_at] if settings.linkedin_li_at else []
     configure_logging(secrets)
     yield
+    global _shared_transport
+    if _shared_transport is not None:
+        await _shared_transport.aclose()
+        _shared_transport = None
 
 
 def create_app() -> FastAPI:
@@ -288,7 +309,11 @@ app = create_app()
 @app.get("/health")
 async def health() -> dict[str, object]:
     settings = get_settings()
-    return {"status": "ok", "server_session_configured": bool(settings.linkedin_li_at)}
+    return {
+        "status": "ok",
+        "server_session_configured": bool(settings.linkedin_li_at),
+        "proxy_configured": bool(settings.proxy_url),
+    }
 
 
 @app.get("/", include_in_schema=False)
