@@ -114,6 +114,47 @@ def test_health(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
     assert isinstance(response.json()["server_session_configured"], bool)
+    assert "api_key_required" not in response.json()
+
+
+def test_ui_index_is_html_and_docs_still_exist(client: TestClient) -> None:
+    home = client.get("/")
+    assert home.status_code == 200
+    assert "text/html" in home.headers["content-type"]
+    assert "Profile lookup" in home.text
+    assert "Look up" in home.text
+    assert "Load example" not in home.text
+    assert "example-btn" not in home.text
+    assert "health-badges" not in home.text
+    assert 'href="/health"' not in home.text
+    assert 'id="api_key"' not in home.text
+    assert "API key" not in home.text
+    assert 'href="/docs"' in home.text
+    docs = client.get("/docs")
+    assert docs.status_code == 200
+
+
+def test_ui_post_shape_matches_backend(client: TestClient, transport: RecordingTransport) -> None:
+    """Same request the page sends: JSON {url} plus optional X-LI-AT, no X-API-Key."""
+    response = client.post(
+        "/v1/profile",
+        json={"url": PROFILE_URL},
+        headers={"X-LI-AT": TEST_COOKIE, "Content-Type": "application/json"},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["success"] is True
+    assert body["data"]["profile"]["full_name"] == "Alex Rivera"
+    assert body["meta"]["source"] == "live"
+    assert transport.calls
+
+
+def test_ui_missing_cookie_error_shape(client: TestClient) -> None:
+    missing = client.post("/v1/profile", json={"url": PROFILE_URL})
+    assert missing.status_code == 401
+    err = missing.json()
+    assert err["success"] is False
+    assert err["error"]["type"] == "MissingCredentialsError"
 
 
 def test_api_key_gates_lookup_but_not_example(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
