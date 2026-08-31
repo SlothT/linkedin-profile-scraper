@@ -1,8 +1,8 @@
 """Capture a raw Voyager profile payload for fixture work.
 
-LinkedIn revokes sessions under automated access — observed revocation after roughly
-ten requests. Do not run this script in a loop. A lifted li_at is a login, not a
-durable credential.
+LinkedIn revokes sessions under automated access — often after a single Voyager
+call from a datacenter IP. Do not run this script in a loop. A lifted li_at is a
+login, not a durable credential.
 
 Writes fixtures/raw_<vanity>.json and refuses to overwrite unless --force is passed.
 Never prints the session cookie.

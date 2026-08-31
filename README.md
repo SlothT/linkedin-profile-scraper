@@ -1,177 +1,256 @@
 # LinkedIn Profile API
 
-HTTPS API that accepts a LinkedIn person-profile URL and returns the profile as structured JSON. Data is fetched from LinkedIn's private Voyager API over HTTP — **no browser, Playwright, or Selenium**.
+HTTPS API that accepts a LinkedIn profile URL and returns structured JSON — name, headline, location, about, experience, education, skills, certifications, languages, profile images, plus projects / featured media when present.
 
-**Deployed URL:** `https://linkedin-profile-api-pdos.onrender.com` (Render free tier).
+Calls LinkedIn’s private **Voyager** API over HTTP. **No browser**, Playwright, or Selenium.
 
-This uses an undocumented private API and contravenes LinkedIn's Terms of Service. Built for a hiring challenge; not for production use.
+| | |
+| --- | --- |
+| **Live app** | [https://linkedin-profile-api-pdos.onrender.com](https://linkedin-profile-api-pdos.onrender.com) |
+| **Swagger** | [https://linkedin-profile-api-pdos.onrender.com/docs](https://linkedin-profile-api-pdos.onrender.com/docs) |
+| **Example JSON** | [https://linkedin-profile-api-pdos.onrender.com/v1/profile/example](https://linkedin-profile-api-pdos.onrender.com/v1/profile/example) |
+| **Source** | [github.com/SlothT/linkedin-profile-scraper](https://github.com/SlothT/linkedin-profile-scraper) |
 
-## Quickstart
+- Anyone can open the live app, Swagger, and `/v1/profile/example` with **no credentials**.
+- A **live** LinkedIn fetch needs a caller-supplied `li_at` (or server `LINKEDIN_LI_AT`). From Render’s datacenter IP, LinkedIn often revokes that cookie after one call — prefer local run on the same network as the browser.
+- Render free tier sleeps after ~15 minutes idle; first hit can take ~50s (`--max-time 90`).
 
-### Try it in 10 seconds
+---
 
-`GET /v1/profile/example` needs **no credentials**. It returns anonymised fixture data through the **same mapper** as the live path (`meta.source: "fixture"`).
+## Features
 
-Render's free tier sleeps after ~15 minutes idle and takes ~50s to wake. The first request may be slow; that is a cold start, not a broken deploy. Use a generous `--max-time`:
+- Public HTTPS deploy + lookup UI
+- `POST` / `GET /v1/profile` — `/in/…` URL in, JSON out
+- Session via `X-LI-AT`, body `li_at`, or server `LINKEDIN_LI_AT`
+- In-process TTL cache, serve-stale, single-flight per vanity
+- Per-IP rate limit + process-wide Voyager ceiling
+- Typed errors (`SessionRevokedError`, `ProfileNotFoundError`, …)
+- Fixture endpoint (same mapper as live) + Swagger
+- Secrets only in env / Render — never in git
+
+---
+
+## Try it (no clone)
+
+- **UI:** [linkedin-profile-api-pdos.onrender.com](https://linkedin-profile-api-pdos.onrender.com)
+- **Swagger:** […/docs](https://linkedin-profile-api-pdos.onrender.com/docs) — exercise endpoints in the browser
+- **Example (no cookie):** anonymised fixture through the real mapper
 
 ```bash
 curl --max-time 90 https://linkedin-profile-api-pdos.onrender.com/v1/profile/example
 ```
 
-Example (truncated):
+**Request** — `POST /v1/profile`
+
+```json
+{
+  "url": "https://www.linkedin.com/in/<vanity>",
+  "li_at": "AQEDAxxxxxxxx"
+}
+```
+
+- `li_at` may instead be header `X-LI-AT`
+- Never put the cookie on the query string
+- If `LINKEDIN_LI_AT` is set on the server, omit it from the request
+
+**Response** (trimmed; live payloads fill the arrays when LinkedIn returns data)
 
 ```json
 {
   "success": true,
   "data": {
     "profile": {
-      "public_identifier": "alex-rivera-demo",
       "full_name": "Alex Rivera",
-      "headline": "Senior Software Engineer at Northwind | Ex-Contoso"
+      "headline": "Senior Software Engineer at Northwind | Ex-Contoso",
+      "about": "Builds backend systems at Northwind.",
+      "location": { "full": "Springfield, Example State, Exampleland", "country_code": "IN" },
+      "profile_picture": [{ "width": 800, "height": 800, "url": "https://media.example.invalid/..." }]
     },
     "experience": [],
-    "skills": []
+    "education": [],
+    "skills": [],
+    "certifications": [],
+    "languages": []
   },
-  "meta": {
-    "source": "fixture",
-    "cached": false,
-    "stale": false,
-    "unverified_sections": [
-      "volunteering", "honors", "publications", "patents",
-      "courses", "organizations", "test_scores"
-    ]
-  }
+  "meta": { "source": "fixture", "cached": false, "stale": false }
 }
 ```
 
-### Live lookup
+- `meta.source`: `live` | `cache` | `stale` | `fixture`
+- `stale: true` is still HTTP **200** (last good data after a transient upstream failure)
+- Errors: `{ "success": false, "error": { "type": "SessionRevokedError", "message": "..." } }`
 
-Open `http://127.0.0.1:8000/` after starting the server: paste a profile URL and `li_at`, then read the profile on the same page.
+---
+
+## Architecture
+
+```
+Client ──HTTPS──▶ FastAPI (Render)
+                     │
+                     ├─ rate limit (per IP)
+                     ├─ resolve li_at
+                     ├─ fresh cache hit? ──▶ return
+                     ├─ single-flight lock (per vanity)
+                     ├─ upstream ceiling
+                     ├─ VoyagerClient + curl_cffi (Chrome TLS)
+                     │       └── GET LinkedIn Voyager
+                     ├─ map {data,included} ──▶ ProfileData
+                     └─ write fresh + stale caches
+```
+
+**Live lookup sequence**
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant API as FastAPI
+    participant Cache as TTL caches
+    participant V as VoyagerClient
+    participant LI as LinkedIn Voyager
+
+    C->>API: POST /v1/profile {url, li_at?}
+    API->>API: API key? rate limit? parse vanity
+    API->>Cache: fresh get(vanity)
+    alt cache hit
+        Cache-->>API: ProfileData
+        API-->>C: 200 source=cache
+    else miss
+        API->>API: single-flight lock + upstream ceiling
+        API->>V: fetch_profile(vanity)
+        V->>LI: GET /identity/dash/profiles<br/>(decoration FullProfileWithEntities-93)
+        alt 200 + valid envelope
+            LI-->>V: {data, included}
+            V-->>API: payload
+            API->>API: build_profile_data()
+            API->>Cache: store fresh + stale
+            API-->>C: 200 source=live
+        else revoked / rejected / network
+            LI-->>V: 302 delete me / 4xx / error
+            V-->>API: typed error
+            API->>Cache: stale get(vanity)
+            alt stale hit
+                API-->>C: 200 source=stale
+            else no stale
+                API-->>C: 4xx / 5xx error JSON
+            end
+        end
+    end
+```
+
+**Layout**
+
+| Path | Role |
+| --- | --- |
+| `app/main.py` | Routes, cache, rate limits, single-flight |
+| `app/linkedin/client.py` | Voyager HTTP + status → error taxonomy |
+| `app/linkedin/mapper.py` | Graph → `ProfileData` |
+| `app/linkedin/normalize.py` | URN / `included` resolution |
+| `app/schemas.py` | Response models |
+| `fixtures/` | Anonymised captures for tests + `/example` |
+
+---
+
+## Setup
+
+Requires **Python 3.13** and [uv](https://docs.astral.sh/uv/).
 
 ```bash
+git clone https://github.com/SlothT/linkedin-profile-scraper.git
+cd linkedin-profile-scraper
 uv sync
-cp .env.example .env   # then set LINKEDIN_LI_AT and, for a reliable demo, PROXY_URL
+cp .env.example .env
 uv run uvicorn app.main:app --reload
 ```
 
+- UI: http://127.0.0.1:8000/
+- Swagger: http://127.0.0.1:8000/docs
+
+| Env | Purpose |
+| --- | --- |
+| `LINKEDIN_LI_AT` | Server-side session fallback |
+| `API_KEY` | Require `X-API-Key` |
+| `PROXY_URL` | Outbound proxy (residential for reliable cloud live) |
+| `CACHE_TTL` | Fresh cache seconds (default `900`) |
+| `UPSTREAM_LIMIT` | Max Voyager calls / 60s process-wide (default `8`) |
+| `RATE_LIMIT_PER_MINUTE` | Per-client cap on `/v1/profile` (default `30`) |
+
 ```bash
-curl --max-time 90 -X POST https://linkedin-profile-api-pdos.onrender.com/v1/profile \
+curl -X POST http://127.0.0.1:8000/v1/profile \
   -H 'Content-Type: application/json' \
-  -H 'X-LI-AT: <paste li_at>' \
-  -d '{"url":"https://www.linkedin.com/in/<vanity-name>"}'
+  -H 'X-LI-AT: <li_at>' \
+  -d '{"url":"https://www.linkedin.com/in/<vanity>"}'
 ```
 
-A lifted `li_at` is short-lived under automation (sessions were revoked after roughly ten automated requests). If the live call returns `401 SessionRevokedError`, **the deployment is working and the cookie has expired**. Paste a fresh `li_at` in the Render dashboard (`LINKEDIN_LI_AT`) immediately before a demo — not hours earlier.
+---
 
-## API reference
+## API
 
-Interactive docs: `/docs`.
+| Method | Path | Auth |
+| --- | --- | --- |
+| `POST` | `/v1/profile` | `X-LI-AT` \| body `li_at` \| `LINKEDIN_LI_AT`; optional `X-API-Key` |
+| `GET` | `/v1/profile?url=` | Header / server cookie only |
+| `GET` | `/v1/profile/example` | None |
+| `GET` | `/health` | None |
+| `GET` | `/` | None (UI) |
+| `GET` | `/docs` | None (Swagger) |
 
-| Method | Path | Auth | Notes |
-| --- | --- | --- | --- |
-| `POST` | `/v1/profile` | `X-LI-AT` or body `li_at` or server `LINKEDIN_LI_AT`; `X-API-Key` if configured | Live lookup |
-| `GET` | `/v1/profile?url=` | `X-LI-AT` or server fallback. **`li_at` is not accepted as a query parameter** | Same as POST |
-| `GET` | `/v1/profile/example` | none | Fixture via the real mapper |
-| `GET` | `/health` | none | `{"status":"ok","server_session_configured":bool}` — never hits LinkedIn |
-| `GET` | `/` | none | Browser UI: paste a profile URL and `li_at`, results render on the same page. OpenAPI remains at `/docs` |
-
-Session precedence: `X-LI-AT` header, then JSON body `li_at` (POST only), then `LINKEDIN_LI_AT`.
-
-### `meta`
-
-| Field | Meaning |
-| --- | --- |
-| `fetched_at` | When the **upstream** fetch happened (ISO-8601 UTC). On cache/stale hits this stays the original timestamp. |
-| `duration_ms` | Time to serve **this** request |
-| `source` | `live` \| `cache` \| `stale` \| `fixture` |
-| `cached` / `stale` / `stale_reason` | See flag table below |
-| `truncated` | Collections where `paging.total` > returned (skills are capped at 20) |
-| `unverified_sections` | Seven sections whose field names were not observed on the captured profiles |
-
-`source` pins the other flags:
-
-| `source` | `cached` | `stale` | `stale_reason` |
-| --- | --- | --- | --- |
-| `live` | `false` | `false` | `null` |
-| `cache` | `true` | `false` | `null` |
-| `stale` | `true` | `true` | exception class name |
-| `fixture` | `false` | `false` | `null` |
-
-A `stale: true` response is a **200 carrying older data**, not a failure. `fetched_at` tells the caller how old it is.
-
-### Errors
+Session order: `X-LI-AT` → body `li_at` → `LINKEDIN_LI_AT`. Person URLs only (`/in/…`).
 
 | `error.type` | HTTP |
 | --- | --- |
 | `InvalidProfileURLError` | 400 |
-| `MissingCredentialsError` | 401 |
-| `SessionRevokedError` | 401 |
+| `MissingCredentialsError` / `SessionRevokedError` | 401 |
 | `SessionRejectedError` | 403 |
 | `ProfileNotFoundError` | 404 |
 | `RateLimitedError` | 429 |
 | `UpstreamShapeError` | 502 |
 | `UpstreamUnavailableError` | 503 |
 
-Two different 429 bodies, neither of which means LinkedIn blocked you:
+Local 429s fire **before** LinkedIn is contacted (per-IP limit or `UPSTREAM_LIMIT`).
 
-- Per-client: `per-client rate limit reached (N requests/minute); this request did not reach LinkedIn`
-- Shared cookie ceiling: `local upstream ceiling reached (N requests/60s); this request did not reach LinkedIn`
+---
 
-## Approach: how this was reverse engineered
+## Approach
 
-Voyager (`/voyager/api`) is LinkedIn's private REST API. One decoration — `FullProfileWithEntities-93` — returns Profile, positions, education, skills, certifications, languages, projects, featured media, and related Company/School/Geo entities in a single call. `/identity/profiles/{vanity}/profileView` is dead (HTTP 410). There is no GraphQL `queryId` scraping here because it is unnecessary.
+- Reverse-engineered Voyager REST (`/voyager/api`) — same private API the website uses
+- One GET returns the profile graph:  
+  `/identity/dash/profiles?q=memberIdentity&memberIdentity={vanity}&decorationId=…FullProfileWithEntities-93`
+- Auth: `li_at` + CSRF double-submit (`JSESSIONID="ajax:…"` cookie, `csrf-token: ajax:…` header). Synthesised CSRF works
+- TLS: `curl_cffi` Chrome impersonation; plain `httpx`/`requests` fail PerimeterX. Do not override `User-Agent`
+- `allow_redirects=False` — revocation is a `302` with `li_at="delete me"`; following redirects loops
+- Envelope `{data, included}`; `*`-keys are URNs into `included` (collections are two hops)
+- Voyager **omits** empty fields (no `null`) — mapper uses `.get()` everywhere; two fixtures used to avoid false “unsupported field” conclusions
+- Stack: Python 3.13, FastAPI, Pydantic, `curl_cffi`
 
-**TLS impersonation, not a browser.** PerimeterX fingerprints the TLS/HTTP2 handshake; plain `requests`/`httpx` are rejected before headers are read. `curl_cffi` with `impersonate="chrome"` reproduces a Chrome handshake. Do not set `User-Agent`; curl_cffi injects a matching one.
+Not used: dead `profileView` (410), GraphQL `queryId` scraping, browser automation.
 
-**CSRF is a stateless double-submit.** Send cookie `JSESSIONID="ajax:<19 digits>"` and header `csrf-token: ajax:<same digits>` (unquoted). A synthesised value works, so `li_at` is the only real credential.
+---
 
-**Normalized JSON.** The envelope is `{data, included}`. Keys prefixed with `*` are URN references into `included`. Collections are two hops: `Profile["*profileSkills"]` → `CollectionResponse` → `*elements` → `Skill` entities. Image URLs are `rootUrl` concatenated with `fileIdentifyingUrlPathSegment` (no slash insertion — the root ends mid-path by design).
+## Limitations
 
-### What two profiles taught us that one could not
+- Cloud/`li_at` sessions often die after one Voyager call (datacenter IP / impossible travel) — local same-network or residential `PROXY_URL`
+- Skills: 20 returned; total in `meta.truncated`
+- No follower / connection counts in this decoration
+- Some sections mapped but unverified on fixtures (`meta.unverified_sections`)
+- Decoration IDs can rotate (`-93`, fallback `-128`)
+- In-process cache/limits reset when Render sleeps
+- Private API / ToS — hiring challenge only, not production
 
-Voyager **omits empty keys** instead of emitting `null`. A single sample makes a member's blank field look like an API limitation. Two independently captured profiles were needed to establish that position descriptions **are** returned when written, that `originalImageReference` is owner-only (third-party profiles expose `displayImageReference` only), and that skills `paging.total` varies per member (26 vs 36) while the endpoint always returns 20.
+---
 
-## Architecture and trade-offs
+## Security
 
-**Synchronous, not a task queue.** The common pattern for scraping APIs is FastAPI plus Celery plus Redis returning `202` and a job id. That is right when completion time is unpredictable; this is one upstream call of one to two seconds, so a queue would add two services for no latency benefit. Global pacing of upstream calls comes from the single-flight lock and `UPSTREAM_LIMIT` instead.
+- Cookies are per-request — not persisted; redacted from logs
+- Secrets only in `.env` / Render (`.env` gitignored)
+- Cache keyed by vanity, read **after** auth — cannot skip `API_KEY` / missing cookie
+- Fixtures anonymised; raw captures gitignored
+- Treat `li_at` as a full login — do not share others’ cookies
 
-**In-process cache and limiter, no Redis.** Render free web services cannot scale past a single instance, so single-process state is coherent rather than merely convenient. Honest cost: the tier spins down after ~15 minutes and has an ephemeral filesystem, so cache and counters reset on wake. A cold cache is harmless; a reset counter is why the ceiling is set low.
-
-**One request per profile, no decoy traffic.** Established LinkedIn automation tools inject fake feed and notification calls to look organic. That suits tools doing hundreds of writes; here every decoy would spend from the same session budget as a real lookup, and one profile fetch already looks like a human opening one page.
-
-**Two rate limits, not one.** `RATE_LIMIT_PER_MINUTE` (default 30) protects the service per client IP. `UPSTREAM_LIMIT` (default 8) is a process-wide ceiling on Voyager calls and protects the shared cookie. Several well-behaved callers can still exhaust the session if only a per-IP limit exists; a global-only limit would let one abusive client consume the entire budget.
-
-**Single-flight and serve-stale.** Concurrent duplicate requests collapse into one upstream call. A transient upstream failure returns the last good response flagged `stale` rather than a `401` that reads as a broken deploy.
-
-**Why not a browser.** The brief forbids Playwright/Selenium; TLS impersonation is what makes a direct HTTP client viable.
-
-## Known limitations
-
-- Skills are capped at 20 by the endpoint while `paging.total` reports the real count (26 and 36 on the two profiles tested). Surfaced in `meta.truncated` rather than worked around.
-- Seven sections — volunteering, honors, publications, patents, courses, organizations and test scores — are returned by the endpoint but were empty on both profiles available for testing, so their field names are inferred rather than observed. They are mapped defensively and listed in `meta.unverified_sections`.
-- The service imposes `UPSTREAM_LIMIT` (default 8) Voyager requests per rolling 60 seconds. Exceeding it returns 429 without contacting LinkedIn. Configurable; a 429 is not automatically an upstream block.
-- Featured media can be a link or an uploaded document; `media_type` distinguishes them. For uploads the URL is a short-lived signed document URL, so it expires.
-- Follower and connection counts are not present in this decoration and are not available from this endpoint.
-- Background and profile images come from `displayImageReference`; the uncropped `originalImageReference` is only exposed to the profile's owner.
-- Decoration IDs carry version suffixes that rotate. Two candidates are tried (`-93` then `-128`). If both fail with `UpstreamShapeError`, re-capture a current `decorationId` from browser devtools and add it to `DECORATION_CANDIDATES` in `app/linkedin/constants.py`.
-- A lifted `li_at` is a login, not a durable session. LinkedIn revoked test sessions after roughly ten automated requests, replying `302` with `li_at="delete me"`. Serve-stale and `/v1/profile/example` keep the API demonstrable across a revocation.
-- **The strongest revocation trigger is geographic, not behavioural.** A cookie minted in a browser in one country and replayed from a cloud datacenter in another is "impossible travel". Mitigate by deploying to the Render region nearest where the cookie was minted (`region: singapore` in `render.yaml` for India) and routing egress through a residential proxy in that country via `PROXY_URL`. Datacenter IP reputation compounds it independently of TLS fingerprint. `PROXY_URL` is close to required for a reliable live demo.
-- Cache and rate-limiter state are in-process and reset on free-tier spin-down.
-- Behind a TLS-inspecting corporate proxy, the impersonated fingerprint never reaches LinkedIn; `CA_BUNDLE` can make local runs work but such an environment cannot validate the approach.
-- Only person profiles (`/in/...`); no companies or schools.
-- Undocumented private API; not for production use.
-
-## Security notes
-
-Cookies are accepted per request, never logged or persisted. A logging filter redacts configured secrets and any `li_at`-shaped token (`AQ…`). Secrets live in the environment / Render dashboard only.
-
-Both the fresh and stale caches are keyed on the vanity name **alone** and are read **only after** authenticating, so neither can be used to bypass the API key or `MissingCredentialsError`.
-
-The committed fixtures are anonymised, not merely hostname-rewritten: names, `publicIdentifier`s, member urns, media asset ids, artifact path segments, signed URL tokens, and company/school/geo urns are fabricated. Media URLs point at the non-resolving host `media.example.invalid`. Raw captures are gitignored under an allowlist (`fixtures/*` except the two `profile_*_sample.json` files).
+---
 
 ## Testing
 
-No credentials or network required:
+No LinkedIn credentials or network (fake transport injected):
 
 ```bash
 uv sync
