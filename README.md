@@ -2,7 +2,7 @@
 
 HTTPS API that accepts a LinkedIn person-profile URL and returns the profile as structured JSON. Data is fetched from LinkedIn's private Voyager API over HTTP — **no browser, Playwright, or Selenium**.
 
-**Deployed URL:** `https://linkedin-profile-api.onrender.com` (Render free tier; update this if the service name is taken).
+**Deployed URL:** `https://linkedin-profile-api-pdos.onrender.com` (Render free tier).
 
 This uses an undocumented private API and contravenes LinkedIn's Terms of Service. Built for a hiring challenge; not for production use.
 
@@ -15,7 +15,7 @@ This uses an undocumented private API and contravenes LinkedIn's Terms of Servic
 Render's free tier sleeps after ~15 minutes idle and takes ~50s to wake. The first request may be slow; that is a cold start, not a broken deploy. Use a generous `--max-time`:
 
 ```bash
-curl --max-time 90 https://linkedin-profile-api.onrender.com/v1/profile/example
+curl --max-time 90 https://linkedin-profile-api-pdos.onrender.com/v1/profile/example
 ```
 
 Example (truncated):
@@ -46,6 +46,8 @@ Example (truncated):
 
 ### Live lookup
 
+Open `http://127.0.0.1:8000/` after starting the server: paste a profile URL and `li_at`, then read the profile on the same page.
+
 ```bash
 uv sync
 cp .env.example .env   # then set LINKEDIN_LI_AT and, for a reliable demo, PROXY_URL
@@ -53,10 +55,10 @@ uv run uvicorn app.main:app --reload
 ```
 
 ```bash
-curl --max-time 90 -X POST https://linkedin-profile-api.onrender.com/v1/profile \
+curl --max-time 90 -X POST https://linkedin-profile-api-pdos.onrender.com/v1/profile \
   -H 'Content-Type: application/json' \
   -H 'X-LI-AT: <paste li_at>' \
-  -d '{"url":"https://www.linkedin.com/in/alex-rivera-demo"}'
+  -d '{"url":"https://www.linkedin.com/in/<vanity-name>"}'
 ```
 
 A lifted `li_at` is short-lived under automation (sessions were revoked after roughly ten automated requests). If the live call returns `401 SessionRevokedError`, **the deployment is working and the cookie has expired**. Paste a fresh `li_at` in the Render dashboard (`LINKEDIN_LI_AT`) immediately before a demo — not hours earlier.
@@ -71,7 +73,7 @@ Interactive docs: `/docs`.
 | `GET` | `/v1/profile?url=` | `X-LI-AT` or server fallback. **`li_at` is not accepted as a query parameter** | Same as POST |
 | `GET` | `/v1/profile/example` | none | Fixture via the real mapper |
 | `GET` | `/health` | none | `{"status":"ok","server_session_configured":bool}` — never hits LinkedIn |
-| `GET` | `/` | none | Redirects to `/docs` |
+| `GET` | `/` | none | Browser UI: paste a profile URL and `li_at`, results render on the same page. OpenAPI remains at `/docs` |
 
 Session precedence: `X-LI-AT` header, then JSON body `li_at` (POST only), then `LINKEDIN_LI_AT`.
 
