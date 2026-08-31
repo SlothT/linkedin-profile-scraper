@@ -62,13 +62,17 @@ LinkedIn often kills `li_at` after one Voyager call from automation. If that hap
 2. Prefer **Windows native Python** over WSL2 for `uvicorn` (same network stack as Chrome).
 3. Paste a **full Cookie string** from DevTools (`li_at` + `JSESSIONID` + `bcookie` / `li_a` / `liap`), not only `li_at`.
 4. Mint a **fresh** cookie after any revoke — dead cookies stay dead.
-5. Diagnose with one `/me` call before a profile lookup:
+5. Parse cookies without burning a LinkedIn call:
 
 ```bash
 uv run python scripts/diagnose_session.py --cookies 'li_at=AQ…; JSESSIONID="ajax:…"; bcookie=…'
 ```
 
-If diagnose fails from WSL but the browser still works, switch to Windows `uvicorn`. nginx cannot fix this.
+6. Then look up **one** real profile in the UI. Do **not** run `diagnose_session.py --ping` first — `/me` counts as a Voyager request, and LinkedIn often allows only one automated call before revoke.
+
+If you already ran `--ping` successfully and the next UI lookup fails, mint a **new** cookie and skip `--ping`.
+
+If the server says `Address already in use` on port 8000, kill the old process and restart from `dev`. nginx cannot fix revocation.
 
 ```bash
 curl --max-time 90 -X POST https://linkedin-profile-api-pdos.onrender.com/v1/profile \

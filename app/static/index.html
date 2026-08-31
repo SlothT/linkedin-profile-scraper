@@ -307,7 +307,7 @@
     function renderError(body, httpStatus) {
       const err = (body && body.error) || {};
       const tip = err.type === "SessionRevokedError"
-        ? `<p class="hint">Cookie dead. Paste a <strong>fresh</strong> session (full Cookie string preferred). Run locally on the same home network as the browser that minted it — not Render. On WSL2, try Windows <code>uvicorn</code> instead. See README “Local session troubleshooting”.</p>`
+        ? `<p class="hint">Cookie dead. Mint a <strong>new</strong> session in Chrome, paste the full Cookie string here, and look up <strong>one</strong> profile — do not run <code>diagnose_session.py --ping</code> first (that spends the only request). Use local <code>127.0.0.1:8000</code>, not Render. Restart uvicorn if port 8000 was already in use.</p>`
         : "";
       result.innerHTML = `
         <h2>Result</h2>

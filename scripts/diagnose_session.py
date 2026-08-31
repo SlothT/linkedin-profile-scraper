@@ -1,10 +1,12 @@
-"""Check whether a LinkedIn session survives one Voyager /me call from this machine.
+"""Check session paste + optional one Voyager /me call from this machine.
 
-Uses one upstream request. Do not loop it.
+IMPORTANT: a successful /me still spends from LinkedIn's automation budget.
+If sessions die after one profile lookup, skip --ping and go straight to the UI
+with a fresh cookie — do not diagnose then look up.
 
 Examples:
-  uv run python scripts/diagnose_session.py --li-at 'AQ…'
-  uv run python scripts/diagnose_session.py --cookies 'li_at=AQ…; JSESSIONID="ajax:…"; bcookie=…'
+  uv run python scripts/diagnose_session.py --cookies 'li_at=AQ…; …'          # parse only
+  uv run python scripts/diagnose_session.py --cookies 'li_at=AQ…; …' --ping   # burns one call
 """
 
 from __future__ import annotations
@@ -28,6 +30,11 @@ def _parse_args() -> argparse.Namespace:
         "--proxy-url",
         default=None,
         help="Optional PROXY_URL override (else env PROXY_URL).",
+    )
+    parser.add_argument(
+        "--ping",
+        action="store_true",
+        help="Call Voyager /me (uses one LinkedIn request; can exhaust a fragile session).",
     )
     return parser.parse_args()
 
@@ -61,6 +68,12 @@ async def _run(args: argparse.Namespace) -> int:
     print(f"csrf={material.csrf_token}")
     print(f"cookie_names={[part.split('=', 1)[0] for part in material.cookie_header.split('; ')]}")
 
+    if not args.ping:
+        print("result=PARSED  cookie paste looks valid (no LinkedIn call made)")
+        print("Next: paste the SAME fresh cookies into http://127.0.0.1:8000/ and look up ONE profile.")
+        print("Do not run --ping first if your sessions die after a single Voyager call.")
+        return 0
+
     transport = CurlTransport(proxy_url=proxy, ca_bundle=os.environ.get("CA_BUNDLE"))
     client = VoyagerClient(raw, transport=transport)
     try:
@@ -70,7 +83,8 @@ async def _run(args: argparse.Namespace) -> int:
 
     if ok:
         print("result=OK  /me accepted this session from this host")
-        print("Next: look up one real /in/… profile on http://127.0.0.1:8000/")
+        print("WARNING: that /me call may have used your only safe request.")
+        print("If the next UI lookup revokes, mint a NEW cookie and skip --ping next time.")
         return 0
 
     print("result=FAIL  LinkedIn rejected or revoked the session on /me")

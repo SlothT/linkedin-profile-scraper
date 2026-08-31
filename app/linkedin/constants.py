@@ -9,7 +9,8 @@ DECORATION_CANDIDATES: tuple[str, ...] = (
     "com.linkedin.voyager.dash.deco.identity.profile.FullProfileWithEntities-128",
 )
 
-IMPERSONATE_TARGET = "chrome"
+# Prefer a current Chrome TLS profile; bare "chrome" can lag behind LinkedIn's checks.
+IMPERSONATE_TARGET = "chrome136"
 
 CLIENT_VERSION = "1.13.36270"  # value that was accepted by Voyager during probing
 
