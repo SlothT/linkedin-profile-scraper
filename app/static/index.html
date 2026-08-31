@@ -193,10 +193,10 @@
       <input id="url" name="url" type="text" autocomplete="off"
         placeholder="https://www.linkedin.com/in/vanity-name" required />
 
-      <label for="li_at">li_at cookie</label>
+      <label for="li_at">Session cookies</label>
       <textarea id="li_at" name="li_at" spellcheck="false" autocomplete="off"
-        placeholder="Paste the li_at value only (usually starts with AQ…)"></textarea>
-      <p class="hint">DevTools → Application → Cookies → <code>linkedin.com</code> → copy the <strong>value</strong> of <code>li_at</code> only (not <code>li_a</code>, <code>JSESSIONID</code>, or other cookies). Use a real <code>/in/…</code> profile URL, not a demo name.</p>
+        placeholder="li_at=AQ…; JSESSIONID=&quot;ajax:…&quot;; li_a=…; bcookie=…"></textarea>
+      <p class="hint">Best locally: DevTools → Application → Cookies → <code>linkedin.com</code>, copy <strong>li_at</strong> plus companions (<code>JSESSIONID</code>, <code>li_a</code>, <code>bcookie</code>, <code>liap</code>) as one Cookie string. Bare <code>li_at</code> (starts with <code>AQ</code>) still works. Use a real <code>/in/…</code> URL. Prefer Windows Python over WSL if sessions die instantly.</p>
 
       <div class="actions">
         <button class="primary" type="submit" id="submit-btn">Look up</button>
@@ -307,7 +307,7 @@
     function renderError(body, httpStatus) {
       const err = (body && body.error) || {};
       const tip = err.type === "SessionRevokedError"
-        ? `<p class="hint">That cookie is dead — LinkedIn invalidated it. Paste a <strong>fresh</strong> <code>li_at</code> (usually starts with <code>AQ</code>). For free use: mint the cookie and run this app on the <strong>same home network</strong> (local <code>uvicorn</code>). Render/cloud IPs revoke quickly. nginx cannot hide the egress IP.</p>`
+        ? `<p class="hint">Cookie dead. Paste a <strong>fresh</strong> session (full Cookie string preferred). Run locally on the same home network as the browser that minted it — not Render. On WSL2, try Windows <code>uvicorn</code> instead. See README “Local session troubleshooting”.</p>`
         : "";
       result.innerHTML = `
         <h2>Result</h2>
@@ -324,12 +324,13 @@
       statusEl.textContent = message || "";
     }
 
-    function normalizeLiAt(raw) {
-      let value = (raw || "").trim();
-      if (!value) return "";
-      value = value.split(/\r?\n/)[0].trim();
-      if (/^li_at\s*=/i.test(value)) value = value.split("=").slice(1).join("=").trim();
-      return value.replace(/^["']|["']$/g, "");
+    function extractLiAt(raw) {
+      const text = (raw || "").trim();
+      if (!text) return "";
+      const match = text.match(/(?:^|;\s*)li_at=([^;]+)/i);
+      if (match) return match[1].trim().replace(/^["']|["']$/g, "");
+      if (!text.includes("=") && !text.includes(";")) return text.replace(/^["']|["']$/g, "");
+      return "";
     }
 
     async function callApi(path, options) {
@@ -342,8 +343,20 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const url = $("url").value.trim();
-      const liAt = normalizeLiAt($("li_at").value);
-      if (liAt) $("li_at").value = liAt;
+      const sessionPaste = $("li_at").value.trim();
+      const liAt = extractLiAt(sessionPaste);
+      if (sessionPaste && !liAt) {
+        statusEl.className = "status error";
+        statusEl.textContent = "Could not find li_at in paste";
+        renderError({
+          success: false,
+          error: {
+            type: "InvalidCredentialsError",
+            message: "Paste either the bare li_at value (usually starts with AQ) or a full Cookie string that includes li_at=…",
+          },
+        }, 400);
+        return;
+      }
       if (liAt && !/^AQ/i.test(liAt)) {
         statusEl.className = "status error";
         statusEl.textContent = "Cookie does not look like li_at";
@@ -351,14 +364,19 @@
           success: false,
           error: {
             type: "InvalidCredentialsError",
-            message: "The value you pasted does not look like LinkedIn li_at (those usually start with AQ). Open DevTools → Cookies → li_at and copy only that cookie’s value.",
+            message: "li_at usually starts with AQ. Confirm you copied the li_at cookie from linkedin.com, not another cookie.",
           },
         }, 400);
         return;
       }
       const headers = { "Content-Type": "application/json" };
-      if (liAt) headers["X-LI-AT"] = liAt;
       const payload = { url };
+      if (sessionPaste.includes(";") || /li_at=/i.test(sessionPaste)) {
+        headers["X-LI-Cookies"] = sessionPaste;
+        payload.cookies = sessionPaste;
+      } else if (liAt) {
+        headers["X-LI-AT"] = liAt;
+      }
       setBusy(true, "Calling Voyager…");
       try {
         const { response, body } = await callApi("/v1/profile", {

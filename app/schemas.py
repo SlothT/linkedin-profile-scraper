@@ -193,3 +193,5 @@ class ProfileResponse(BaseModel):
 class ProfileRequest(BaseModel):
     url: str
     li_at: str | None = None
+    # Optional full Cookie header paste (li_at + companions). Same as X-LI-Cookies.
+    cookies: str | None = None

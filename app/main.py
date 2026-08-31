@@ -32,7 +32,7 @@ from app.errors import (
 from app.linkedin.client import CurlTransport, Transport, VoyagerClient
 from app.linkedin.constants import DECORATION_CANDIDATES
 from app.linkedin.mapper import UNVERIFIED_SECTIONS, build_profile_data
-from app.linkedin.session import normalize_li_at
+from app.linkedin.session import parse_session_material
 from app.linkedin.urls import extract_vanity_name
 from app.logging_setup import configure_logging
 from app.schemas import ProfileData, ProfileRequest, ProfileResponse, ResponseMeta, TruncationInfo
@@ -131,21 +131,25 @@ def _require_api_key(request: Request) -> None:
         raise MissingCredentialsError("Invalid or missing API key")
 
 
-def _resolve_session(request: Request, body_li_at: str | None) -> str:
+def _resolve_session(
+    request: Request,
+    body_li_at: str | None,
+    body_cookies: str | None = None,
+) -> str:
+    """Return raw session paste (bare li_at or full Cookie header) for VoyagerClient."""
+    header_cookies = request.headers.get("x-li-cookies")
+    if header_cookies and header_cookies.strip():
+        return header_cookies.strip()
+    if body_cookies and body_cookies.strip():
+        return body_cookies.strip()
     header_cookie = request.headers.get("x-li-at")
-    if header_cookie:
-        normalized = normalize_li_at(header_cookie)
-        if normalized:
-            return normalized
-    if body_li_at:
-        normalized = normalize_li_at(body_li_at)
-        if normalized:
-            return normalized
+    if header_cookie and header_cookie.strip():
+        return header_cookie.strip()
+    if body_li_at and body_li_at.strip():
+        return body_li_at.strip()
     settings = get_settings()
-    if settings.linkedin_li_at:
-        normalized = normalize_li_at(settings.linkedin_li_at)
-        if normalized:
-            return normalized
+    if settings.linkedin_li_at and settings.linkedin_li_at.strip():
+        return settings.linkedin_li_at.strip()
     raise MissingCredentialsError()
 
 
@@ -181,11 +185,16 @@ async def _lookup_profile(
     profile_url: str,
     body_li_at: str | None,
     transport: Transport,
+    body_cookies: str | None = None,
 ) -> ProfileResponse:
     started = time.perf_counter()
     _require_api_key(request)
     vanity_name = extract_vanity_name(profile_url)
-    li_at = _resolve_session(request, body_li_at)
+    session_raw = _resolve_session(request, body_li_at, body_cookies)
+    try:
+        parse_session_material(session_raw)
+    except ValueError as exc:
+        raise MissingCredentialsError(str(exc) or "Invalid session cookie") from exc
 
     cached_hit = fresh_cache.get(vanity_name)
     if cached_hit is not None:
@@ -213,7 +222,7 @@ async def _lookup_profile(
                 "cache",
             )
         _check_upstream_ceiling()
-        client = VoyagerClient(li_at, transport=transport)
+        client = VoyagerClient(session_raw, transport=transport)
         try:
             payload, decoration_id = await client.fetch_profile(vanity_name)
         except _TRANSIENT_UPSTREAM as exc:
@@ -351,7 +360,7 @@ async def post_profile(
     body: ProfileRequest,
     transport: Transport = Depends(get_transport),  # noqa: B008
 ) -> ProfileResponse:
-    return await _lookup_profile(request, body.url, body.li_at, transport)
+    return await _lookup_profile(request, body.url, body.li_at, transport, body.cookies)
 
 
 @app.get("/v1/profile", response_model=ProfileResponse, responses=ERROR_RESPONSES)
@@ -361,4 +370,4 @@ async def get_profile(
     url: str,
     transport: Transport = Depends(get_transport),  # noqa: B008
 ) -> ProfileResponse:
-    return await _lookup_profile(request, url, None, transport)
+    return await _lookup_profile(request, url, None, transport, None)

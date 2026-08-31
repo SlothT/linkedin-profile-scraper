@@ -22,11 +22,12 @@ from app.errors import (
 from app.linkedin.constants import (
     DECORATION_CANDIDATES,
     IMPERSONATE_TARGET,
+    ME_PATH,
     PROFILE_PATH,
     VOYAGER_BASE,
     build_headers,
 )
-from app.linkedin.session import csrf_token_for_li_at, normalize_li_at
+from app.linkedin.session import SessionMaterial, parse_session_material
 
 
 @dataclass
@@ -100,13 +101,16 @@ class CurlTransport:
 
 class VoyagerClient:
     def __init__(self, li_at: str, transport: Transport | None = None) -> None:
-        self._li_at = normalize_li_at(li_at)
-        self._csrf_token = csrf_token_for_li_at(self._li_at)
+        self._session = parse_session_material(li_at)
         self._transport = transport or CurlTransport()
 
+    @property
+    def session(self) -> SessionMaterial:
+        return self._session
+
     def _request_headers(self, referer: str | None) -> dict[str, str]:
-        headers = build_headers(self._csrf_token, referer)
-        headers["cookie"] = f'li_at={self._li_at}; JSESSIONID="{self._csrf_token}"'
+        headers = build_headers(self._session.csrf_token, referer)
+        headers["cookie"] = self._session.cookie_header
         return headers
 
     def _classify(self, response: VoyagerResponse, request_url: str) -> dict | None:
@@ -157,3 +161,22 @@ class VoyagerClient:
         if last_error is not None:
             raise last_error
         raise UpstreamShapeError()
+
+    async def ping_session(self) -> bool:
+        """One lightweight ``/me`` call. Prefer ``scripts/diagnose_session.py`` over the API path."""
+        url = f"{VOYAGER_BASE}{ME_PATH}"
+        response = await self._transport.get(url, self._request_headers(referer=None))
+        try:
+            payload = self._classify(response, url)
+        except (
+            SessionRevokedError,
+            SessionRejectedError,
+            RateLimitedError,
+            ProfileNotFoundError,
+            UpstreamShapeError,
+        ):
+            return False
+        if not payload:
+            return False
+        included = payload.get("included") or []
+        return any(isinstance(entity, dict) and entity.get("publicIdentifier") for entity in included)

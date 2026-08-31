@@ -46,13 +46,29 @@ Example (truncated):
 
 ### Live lookup
 
-Open `http://127.0.0.1:8000/` after starting the server: paste a profile URL and `li_at`, then read the profile on the same page.
+Open `http://127.0.0.1:8000/` after starting the server: paste a profile URL and session cookies, then read the profile on the same page.
 
 ```bash
 uv sync
-cp .env.example .env   # then set LINKEDIN_LI_AT and, for a reliable demo, PROXY_URL
+cp .env.example .env   # optional LINKEDIN_LI_AT / PROXY_URL
 uv run uvicorn app.main:app --reload
 ```
+
+### Local session troubleshooting (free path)
+
+LinkedIn often kills `li_at` after one Voyager call from automation. If that happens on **both** Render and local:
+
+1. **Do not use the Render URL for live lookups.** Cloud IPs revoke first.
+2. Prefer **Windows native Python** over WSL2 for `uvicorn` (same network stack as Chrome).
+3. Paste a **full Cookie string** from DevTools (`li_at` + `JSESSIONID` + `bcookie` / `li_a` / `liap`), not only `li_at`.
+4. Mint a **fresh** cookie after any revoke — dead cookies stay dead.
+5. Diagnose with one `/me` call before a profile lookup:
+
+```bash
+uv run python scripts/diagnose_session.py --cookies 'li_at=AQ…; JSESSIONID="ajax:…"; bcookie=…'
+```
+
+If diagnose fails from WSL but the browser still works, switch to Windows `uvicorn`. nginx cannot fix this.
 
 ```bash
 curl --max-time 90 -X POST https://linkedin-profile-api-pdos.onrender.com/v1/profile \

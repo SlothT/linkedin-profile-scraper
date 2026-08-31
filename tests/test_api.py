@@ -151,6 +151,23 @@ def test_ui_post_shape_matches_backend(client: TestClient, transport: RecordingT
     assert transport.calls
 
 
+def test_full_cookie_header_is_accepted(client: TestClient, transport: RecordingTransport) -> None:
+    cookie_header = (
+        f'li_at={TEST_COOKIE}; JSESSIONID="ajax:1111111111111111111"; bcookie=v=2&x; li_a=AQc'
+    )
+    response = client.post(
+        "/v1/profile",
+        json={"url": PROFILE_URL, "cookies": cookie_header},
+        headers={"X-LI-Cookies": cookie_header, "Content-Type": "application/json"},
+    )
+    assert response.status_code == 200
+    assert transport.calls
+    sent_cookie = transport.calls[0][1]["cookie"]
+    assert f"li_at={TEST_COOKIE}" in sent_cookie
+    assert "bcookie=v=2&x" in sent_cookie
+    assert 'JSESSIONID="ajax:1111111111111111111"' in sent_cookie
+
+
 def test_ui_missing_cookie_error_shape(client: TestClient) -> None:
     missing = client.post("/v1/profile", json={"url": PROFILE_URL})
     assert missing.status_code == 401
