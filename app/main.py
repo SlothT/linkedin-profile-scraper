@@ -13,7 +13,7 @@ from typing import Any
 from cachetools import TTLCache
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
@@ -55,6 +55,7 @@ upstream_timestamps: deque[float] = deque()
 limiter = Limiter(key_func=get_remote_address)
 
 logger = logging.getLogger("linkedin-profile-api")
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: {"description": "Invalid profile URL"},
@@ -291,8 +292,8 @@ async def health() -> dict[str, object]:
 
 
 @app.get("/", include_in_schema=False)
-async def root() -> RedirectResponse:
-    return RedirectResponse(url="/docs")
+async def root() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html", media_type="text/html; charset=utf-8")
 
 
 @app.get("/v1/profile/example", response_model=ProfileResponse)

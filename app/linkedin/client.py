@@ -23,7 +23,6 @@ from app.errors import (
 from app.linkedin.constants import (
     DECORATION_CANDIDATES,
     IMPERSONATE_TARGET,
-    ME_PATH,
     PROFILE_PATH,
     VOYAGER_BASE,
     build_headers,
@@ -136,15 +135,3 @@ class VoyagerClient:
         if last_error is not None:
             raise last_error
         raise UpstreamShapeError()
-
-    async def validate_session(self) -> bool:
-        url = f"{VOYAGER_BASE}{ME_PATH}"
-        response = await self._transport.get(url, self._request_headers(referer=None))
-        try:
-            payload = self._classify(response, url)
-        except (SessionRevokedError, SessionRejectedError, RateLimitedError, ProfileNotFoundError, UpstreamShapeError):
-            return False
-        if not payload:
-            return False
-        included = payload.get("included") or []
-        return any(isinstance(entity, dict) and entity.get("publicIdentifier") for entity in included)
